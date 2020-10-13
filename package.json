@@ -1,36 +1,36 @@
 {
-  "name": "seeder",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier \"src/**/*.{ts,tsx,html,css,js}\"",
-    "prettier:list": "npm run prettier -- --list-different",
-    "prettier:fix": "npm run prettier -- --write"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/terbooter/seeder.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/terbooter/seeder/issues"
-  },
-  "homepage": "https://github.com/terbooter/seeder#readme",
-  "devDependencies": {
-    "typescript": "4.0.3"
-  },
-  "dependencies": {
-    "@types/faker": "^5.1.2",
-    "@types/node": "^14.11.8",
-    "@types/request": "^2.48.5",
-    "faker": "^5.1.0",
-    "prettier": "^2.1.2",
-    "request": "^2.88.2"
-  },
-  "files": [
-    "dist/**/*"
-  ]
+    "name": "seeder",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prettier": "prettier \"src/**/*.{ts,tsx,html,css,js}\"",
+        "prettier:list": "npm run prettier -- --list-different",
+        "prettier:fix": "npm run prettier -- --write"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/terbooter/seeder.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/terbooter/seeder/issues"
+    },
+    "homepage": "https://github.com/terbooter/seeder#readme",
+    "devDependencies": {
+        "typescript": "4.0.3"
+    },
+    "dependencies": {
+        "@types/faker": "^5.1.2",
+        "@types/node": "^14.11.8",
+        "@types/request": "^2.48.5",
+        "faker": "^5.1.0",
+        "prettier": "^2.1.2",
+        "request": "^2.88.2"
+    },
+    "files": [
+        "dist/**/*"
+    ]
 }
