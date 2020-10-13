@@ -18,3 +18,8 @@ export interface FlowRequest {
         body?
     }
 }
+
+export interface HttpResponse {
+    statusCode: number
+    body: any
+}

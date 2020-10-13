@@ -1,4 +1,4 @@
-import {FlowRequest} from "./interfaces"
+import {FlowRequest, HttpResponse} from "./interfaces"
 import * as request from "request"
 import {CoreOptions} from "request"
 import {ParamsStorage} from "./ParamsStorage"
@@ -12,7 +12,7 @@ export class Sender {
 
         const method = req.method || "post"
 
-        const url = `http://${this.domain}${req.url}`
+        const url = `${this.domain}${req.url}`
         let options: CoreOptions = {
             method: method,
             headers: {
@@ -23,7 +23,7 @@ export class Sender {
             json: true
         }
 
-        let response = await this.httpRequest(url, options)
+        let response: HttpResponse = await this.httpRequest(url, options)
 
         if (req.log) {
             console.log(response.body)
@@ -73,8 +73,8 @@ export class Sender {
         }
     }
 
-    private async httpRequest(uri, options: CoreOptions): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    private async httpRequest(uri, options: CoreOptions): Promise<HttpResponse> {
+        return new Promise<HttpResponse>((resolve, reject) => {
             request(uri, options, (error, httpResponse, body) => {
                 if (error) {
                     reject(error)
