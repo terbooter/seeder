@@ -2,13 +2,15 @@ import {FlowRequest, HttpResponse} from "./interfaces"
 import * as request from "request"
 import {CoreOptions} from "request"
 import {ParamsStorage} from "./ParamsStorage"
+const colors = require("colors/safe")
 
 export class Sender {
     constructor(private domain: string, private storage: ParamsStorage) {}
 
     public async send(req: FlowRequest) {
         req = this.storage.replaceParams(req)
-        console.log(`--> ${req.url}`)
+
+        process.stdout.write(`--> ${req.url}`)
 
         const method = req.method || "post"
 
@@ -25,28 +27,43 @@ export class Sender {
 
         let response: HttpResponse = await this.httpRequest(url, options)
 
+        const s = `  ${response.statusCode}`
+        process.stdout.write(colors.yellow(s))
+        process.stdout.write(`\n`)
+
         if (req.log) {
             console.log(response.body)
         }
 
         if (response.body.errors) {
-            console.log(response.body.errors)
+            // console.log(response.body.errors)
         }
 
         if (req.expected) {
             const expected = req.expected
 
+            if (expected.statusCode && expected.statusCode !== response.statusCode) {
+                throw new Error(
+                    `Expected status code ${expected.statusCode} but got ${response.statusCode}`
+                )
+            }
+
             Sender.containAllProperties(expected.body, response.body)
         }
 
-        this.saveParamsToStorage(req, response)
+        if (req.store) {
+            this.saveParamsToStorage(req.store, response.body)
+        }
 
         return response
     }
 
-    private saveParamsToStorage(req: FlowRequest, response) {
-        let paramsToSave = req.response
-        let data = response.body.data || null
+    private saveParamsToStorage(paramsToSave, responseBody) {
+        // console.log("@@@@@@")
+        // console.log(paramsToSave)
+        // console.log(responseBody)
+        // console.log("@@@@@@")
+        let data = responseBody || null
 
         // Used to get first element of list
         // Sometimes we want to get id of item (user for example)
@@ -60,9 +77,9 @@ export class Sender {
             data = data[0]
         }
 
-        console.log("===========")
-        console.log(paramsToSave)
-        console.log("===========")
+        // console.log("===========")
+        // console.log(paramsToSave)
+        // console.log("===========")
 
         if (paramsToSave && data) {
             for (let p in paramsToSave) {
@@ -71,6 +88,8 @@ export class Sender {
                 }
             }
         }
+
+        // this.storage.logParams()
     }
 
     private async httpRequest(uri, options: CoreOptions): Promise<HttpResponse> {

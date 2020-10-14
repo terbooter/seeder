@@ -41,7 +41,7 @@ function getFolder(): string {
 }
 
 async function getFlowArray() {
-    const seedsDir = path.resolve(  __dirname, getFolder())
+    const seedsDir = path.resolve(__dirname, getFolder())
     const disk = new Disk(seedsDir)
     let files = await disk.getFiles()
     console.log(files)

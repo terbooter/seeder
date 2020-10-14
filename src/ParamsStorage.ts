@@ -3,6 +3,14 @@ export class ParamsStorage {
 
     constructor() {}
 
+    public logParams() {
+        console.log("params in storage:")
+        for (const key in this.params) {
+            console.log(`${key} = ${this.params[key]}`)
+        }
+        console.log("----")
+    }
+
     public setParam(name: string, value) {
         this.params[name] = value
     }

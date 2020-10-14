@@ -11,7 +11,7 @@ export interface FlowRequest {
     method?
     body?
     headers?
-    response?
+    store?
     log?: boolean
     expected?: {
         statusCode?: number
