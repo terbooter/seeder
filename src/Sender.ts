@@ -44,6 +44,9 @@ export class Sender {
             const expected = req.expected
 
             if (expected.statusCode && expected.statusCode !== response.statusCode) {
+                if (response.body.errors) {
+                    console.log(response.body.errors)
+                }
                 throw new Error(
                     `Expected status code ${expected.statusCode} but got ${response.statusCode}`
                 )
@@ -52,8 +55,8 @@ export class Sender {
             Sender.containAllProperties(expected.body, response.body)
         }
 
-        if (req.store) {
-            this.saveParamsToStorage(req.store, response.body)
+        if (req.save) {
+            this.saveParamsToStorage(req.save, response.body)
         }
 
         return response
@@ -65,18 +68,6 @@ export class Sender {
         // console.log(responseBody)
         // console.log("@@@@@@")
         let data = responseBody || null
-
-        // Used to get first element of list
-        // Sometimes we want to get id of item (user for example)
-        // So we can provide filter by email, but API will return list of users containing one user
-        // This is workaround to get first item of array
-        if (Array.isArray(paramsToSave)) {
-            paramsToSave = paramsToSave[0]
-        }
-
-        if (Array.isArray(data)) {
-            data = data[0]
-        }
 
         // console.log("===========")
         // console.log(paramsToSave)
@@ -100,7 +91,8 @@ export class Sender {
             this.storage.setParam(param_name, r[0])
         }
 
-        // this.storage.logParams()
+        console.log("\n")
+        this.storage.logParams()
     }
 
     private async httpRequest(uri, options: CoreOptions): Promise<HttpResponse> {

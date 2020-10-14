@@ -4,7 +4,7 @@ export class ParamsStorage {
     constructor() {}
 
     public logParams() {
-        console.log("params in storage:")
+        console.log("Params in storage:")
         for (const key in this.params) {
             console.log(`${key} = ${this.params[key]}`)
         }
