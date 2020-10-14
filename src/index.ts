@@ -4,9 +4,10 @@ import * as fs from "fs"
 import {Sender} from "./Sender"
 import {ParamsStorage} from "./ParamsStorage"
 import {FakerCompiler} from "./FakerCompiler"
+import {FlowRequest} from "./interfaces"
 
 async function main() {
-    const arr = await getFlowArray()
+    let arr = await getFlowArray()
 
     const storage = new ParamsStorage()
     const apiDomain = getAPIDomain()
@@ -17,6 +18,8 @@ async function main() {
     /*if (r.statusCode === 502) {
         throw new Error("API response 502");
     }*/
+
+    arr = setDefaultParams(arr)
 
     for (let req of arr) {
         req = fakerCompiler.compileObject(req)
@@ -40,7 +43,7 @@ function getFolder(): string {
     throw new Error(`Missing required folder argument`)
 }
 
-async function getFlowArray() {
+async function getFlowArray(): Promise<FlowRequest[]> {
     const seedsDir = path.resolve(__dirname, getFolder())
     const disk = new Disk(seedsDir)
     let files = await disk.getFiles()
@@ -54,6 +57,17 @@ async function getFlowArray() {
     arr = repeat(arr)
 
     return arr
+}
+
+function setDefaultParams(arr: FlowRequest[]): FlowRequest[] {
+    return arr.map((item: FlowRequest) => {
+        if (!item.expected) {
+            item.expected = {
+                statusCode: 200
+            }
+        }
+        return item
+    })
 }
 
 function repeat(arr) {
