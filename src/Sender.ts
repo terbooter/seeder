@@ -3,6 +3,7 @@ import * as request from "request"
 import {CoreOptions} from "request"
 import {ParamsStorage} from "./ParamsStorage"
 const colors = require("colors/safe")
+const jsonpath = require("jsonpath")
 
 export class Sender {
     constructor(private domain: string, private storage: ParamsStorage) {}
@@ -28,8 +29,8 @@ export class Sender {
         let response: HttpResponse = await this.httpRequest(url, options)
 
         const s = `  ${response.statusCode}`
-        process.stdout.write(colors.yellow(s))
-        process.stdout.write(`\n`)
+
+        console.log(colors.yellow(s))
 
         if (req.log) {
             console.log(response.body)
@@ -81,12 +82,22 @@ export class Sender {
         // console.log(paramsToSave)
         // console.log("===========")
 
-        if (paramsToSave && data) {
-            for (let p in paramsToSave) {
-                if (data[p]) {
-                    this.storage.setParam(paramsToSave[p], data[p])
-                }
+        for (const param_name in paramsToSave) {
+            const jp_string = paramsToSave[param_name]
+            let r: any[] = jsonpath.query(responseBody, jp_string)
+            if (r.length === 0) {
+                throw new Error(
+                    `Please check jsonpath parameter (${jp_string}) it has no matches in the body`
+                )
             }
+
+            if (r.length !== 1) {
+                throw new Error(
+                    `Please check jsonpath parameter (${jp_string}) it has more than one matches in the body`
+                )
+            }
+
+            this.storage.setParam(param_name, r[0])
         }
 
         // this.storage.logParams()
